@@ -1,8 +1,15 @@
 from flask import Flask , request , jsonify
 
 
+"""
+read uptime on /proc/uptime file 
+read system name on /etc/hostname
+read loadavg on /proc/loadavg
+read temp on (try find /sys -name temp and 
+paste temp link in system_data_temp function)
+"""
 
-def system_data_uptime() :
+def system_data_uptime() : 
     read_uptime = open("/proc/uptime")
     raw_uptime = read_uptime.read()
 
@@ -73,6 +80,7 @@ def system_data_temp():
 
 
 app = Flask(__name__)
+
 
 
 
