@@ -1,22 +1,75 @@
 from flask import Flask , request , jsonify
 
-def system_data():
+
+
+def system_data_uptime() :
+    read_uptime = open("/proc/uptime")
+    raw_uptime = read_uptime.read()
+
+    space_rm = raw_uptime.index(" ")
+    uptime = raw_uptime[0:space_rm]
+    
+    uptime_day = ((float(uptime) / 60)/60)/24
+    uptime_hour = (float(uptime) / 60)/60
+    uptime_min = float(uptime) / 60
+    
+    return {"uptime_min" : uptime_min , "uptime_hour" : uptime_hour , "uptime_day" : uptime_day}
+
+
+
+
+def system_data_system_name():
     read_name = open("/etc/hostname")
     system_name = read_name.read()
     
-    read_temp = open("")
-    temp = read_temp()
+    f4edit = system_name.replace("\n" , "")
     
-    read_uptime = open("/proc/uptime")
-    uptime = read_uptime.read()
-    uptime_day = ((int(uptime) / 60)/60)/24
-    uptime_hour = (int(uptime) / 60)/60
-    uptime_min = int(uptime) / 60
-    
+    return {"name" : f4edit}
+
+
+def system_data_loadavg():
     read_loadavg = open("/proc/loadavg")
     loadavg = read_loadavg.read()
 
-    return system_name , uptime , loadavg
+    counter = (0)
+
+    middle = ("")
+    finall_output = []
+    while True :
+        memory = loadavg[counter]
+        if memory != " ":
+            middle = middle + memory
+            counter = counter + 1
+        else :
+            finall_output.append(middle)
+            middle = ("")
+            counter = counter + 1
+
+        if counter == len(loadavg) :
+            finall_output.append(middle)
+            break
+
+    f4edit = finall_output[4]
+    f4edit = f4edit.replace("\n" , "")
+    finall_output[4] = f4edit
+    
+    return {"loadavg(1min)":finall_output[0] ,
+            "loadavg(5min)":finall_output[1] ,
+            "loadavg(15min)":finall_output[2] ,
+            "process":finall_output[3] ,
+            "last_process":finall_output[4]}
+
+
+def system_data_temp():
+    try :
+        read_temp = open("/sys/devices/virtual/thermal/thermal_zone0/temp")
+        temp = read_temp.read()
+        temp = int(temp)
+    except Exception:
+        temp = False
+    
+    return {"temp":temp}
+
 
 
 app = Flask(__name__)
@@ -31,8 +84,13 @@ def data_view():
     file = open("user_token.txt" , "r")
     eval_file = eval(file.read())
     
+
+
     
-    data = system_data()
+    data = {"name":(system_data_system_name())["name"] ,
+        "uptime":system_data_uptime() ,
+        "loadavg":system_data_loadavg() ,
+        "temp": (system_data_temp())["temp"]}
     
     if request.form["user_name"] == eval_file["user_name"] and request.form["token"] == eval_file["token"] :
         return jsonify(data)
