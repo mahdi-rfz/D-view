@@ -1,17 +1,20 @@
 from flask import Flask , request , jsonify
 
 def system_data():
-    f = open("/etc/hostname")
-    system_name = f.read()
+    read_name = open("/etc/hostname")
+    system_name = read_name.read()
     
-    # f = open("")
-    # temp = ("")
+    read_temp = open("")
+    temp = read_temp()
     
-    x = open("/proc/uptime")
-    uptime = x.read()
+    read_uptime = open("/proc/uptime")
+    uptime = read_uptime.read()
+    uptime_day = ((int(uptime) / 60)/60)/24
+    uptime_hour = (int(uptime) / 60)/60
+    uptime_min = int(uptime) / 60
     
-    z = open("/proc/loadavg")
-    loadavg = z.read()
+    read_loadavg = open("/proc/loadavg")
+    loadavg = read_loadavg.read()
 
     return system_name , uptime , loadavg
 
