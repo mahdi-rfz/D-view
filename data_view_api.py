@@ -1,4 +1,6 @@
-from flask import Flask , request , jsonify
+from flask import Flask , request , jsonify #v3.3
+import requests
+import datetime 
 
 
 """
@@ -78,6 +80,27 @@ def system_data_temp():
     return {"temp":temp}
 
 
+def system_data_ip():
+    try :
+        request_url = 'https://geolocation-db.com/jsonp/' 
+        response = requests.get(request_url)
+        response = response.text
+        response = response.replace("callback(" , "")
+        response = response.replace(")" , "")
+        response = response.replace("null" , "False")
+        
+        return (eval(response))["IPv4"]
+    
+    except OSError as e :
+        return " Not found" 
+
+
+def system_data_time():
+    cu = datetime.datetime.now()
+    time = cu.strftime('%H:%M %p')
+    return time
+
+
 
 app = Flask(__name__)
 
@@ -98,7 +121,9 @@ def data_view():
     data = {"name":(system_data_system_name())["name"] ,
         "uptime":system_data_uptime() ,
         "loadavg":system_data_loadavg() ,
-        "temp": (system_data_temp())["temp"]}
+        "temp": (system_data_temp())["temp"], 
+        "ipv4":system_data_ip() ,
+        "time":system_data_time()}
     
     if request.form["user_name"] == eval_file["user_name"] and request.form["token"] == eval_file["token"] :
         return jsonify(data)
