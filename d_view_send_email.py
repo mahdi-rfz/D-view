@@ -1,4 +1,5 @@
 import requests
+import smtplib
 
 file = open("config.txt" , "r")
 check_time = (eval(file.read()))["checktime"] #min 
