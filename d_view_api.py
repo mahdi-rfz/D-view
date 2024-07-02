@@ -122,7 +122,7 @@ def data_view():
         "time":system_data_time()}
     
     if request.form["user_name"] == user_token.user_name and request.form["token"] == user_token.token :
-        return jsonify(data)
+        return (jsonify(data))
     else :
         return False
     
