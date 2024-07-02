@@ -1,17 +1,15 @@
-import requests
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import requests
 
-file = open("config.txt" , "r")
-check_time = (eval(file.read()))["checktime"] #min 
+import config
+import email_config
+import user_token
 
 
-file = open("config.txt" , "r")
-url = (eval(file.read()))["api_url"]
 
-file = open("user_token.txt" , "r")
-user_token = eval(file.read())
-
-request = requests.post(url , user_token)
+request = requests.post(config.api_url ,{"user_name":user_token.user_name , "token":user_token.token})
 response = request.text
 
 name = response["name"]
@@ -33,6 +31,55 @@ uptime_min = response["uptime_min"]
 
 
 
+def send_email_html(subject, html_content, receiver_email):
+    from_email = email_config.email
+    password = email_config.password
+    
+    smtp_server = "smtp.office365.com"
+    smtp_port = 587
+    
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(html_content, 'html'))
+    
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(from_email, password)
+        text = msg.as_string()
+        server.sendmail(from_email, receiver_email, text)
+        server.quit()
+        print("sent")
+    except Exception as e:
+        print(f"eror: {e}")
+    
 
-def send_email(check_time):
-    pass
+
+
+
+
+def send_email_text(subject, body, receiver_email):
+    from_email = email_config.email
+    password = email_config.password
+
+    smtp_server = "smtp.office365.com"
+    smtp_port = 587
+
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(from_email, password)
+        text = msg.as_string()
+        server.sendmail(from_email, receiver_email, text)
+        server.quit()
+        print("sent")
+    except Exception as e:
+        print(f"eror {e}")
