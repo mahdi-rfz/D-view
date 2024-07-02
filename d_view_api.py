@@ -1,6 +1,7 @@
 from flask import Flask , request , jsonify #v3.3
 import requests
 import datetime 
+import user_token
 
 
 """
@@ -112,12 +113,7 @@ def data_view():
     if "user_name" not in request.form and "token" not in request.form:
         return jsonify({"Eror": "Your request format is incorrect(use user name and token)"}), 400
     
-    file = open("user_token.txt" , "r")
-    eval_file = eval(file.read())
-    
 
-
-    
     data = {"name":(system_data_system_name())["name"] ,
         "uptime":system_data_uptime() ,
         "loadavg":system_data_loadavg() ,
@@ -125,7 +121,7 @@ def data_view():
         "ipv4":system_data_ip() ,
         "time":system_data_time()}
     
-    if request.form["user_name"] == eval_file["user_name"] and request.form["token"] == eval_file["token"] :
+    if request.form["user_name"] == user_token.user_name and request.form["token"] == user_token.token :
         return jsonify(data)
     else :
         return False
