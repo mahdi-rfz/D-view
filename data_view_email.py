@@ -4,9 +4,9 @@ from email.mime.text import MIMEText
 import requests
 import time 
 
-import config
-import email_config
-import user_token
+import configs.config as config
+import configs.email_config as email_config
+import configs.user_token as user_token
 
 
 def api_request():
