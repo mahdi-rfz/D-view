@@ -1,7 +1,9 @@
 from flask import Flask , request , jsonify #v3.3
 import requests
 import datetime 
-import user_token
+import configs.user_token as user_token
+
+from configs import config
 
 
 """
@@ -13,15 +15,21 @@ paste temp link in system_data_temp function)
 """
 
 def system_data_uptime() : 
-    read_uptime = open("/proc/uptime")
-    raw_uptime = read_uptime.read()
+    try :
+        read_uptime = open("/proc/uptime")
+        raw_uptime = read_uptime.read()
 
-    space_rm = raw_uptime.index(" ")
-    uptime = raw_uptime[0:space_rm]
-    
-    uptime_day = ((float(uptime) / 60)/60)/24
-    uptime_hour = (float(uptime) / 60)/60
-    uptime_min = float(uptime) / 60
+        space_rm = raw_uptime.index(" ")
+        uptime = raw_uptime[0:space_rm]
+        
+        uptime_day = ((float(uptime) / 60)/60)/24
+        uptime_hour = (float(uptime) / 60)/60
+        uptime_min = float(uptime) / 60
+        
+    except Exception :
+        uptime_day = None
+        uptime_hour = None
+        uptime_min = None
     
     return {"uptime_min" : uptime_min , "uptime_hour" : uptime_hour , "uptime_day" : uptime_day}
 
@@ -29,39 +37,48 @@ def system_data_uptime() :
 
 
 def system_data_system_name():
-    read_name = open("/etc/hostname")
-    system_name = read_name.read()
-    
-    f4edit = system_name.replace("\n" , "")
+    try :
+        read_name = open("/etc/hostname")
+        system_name = read_name.read()
+        
+        f4edit = system_name.replace("\n" , "")
+    except Exception :
+        f4edit = None
     
     return {"name" : f4edit}
 
 
+
+
 def system_data_loadavg():
-    read_loadavg = open("/proc/loadavg")
-    loadavg = read_loadavg.read()
+    try :
+        read_loadavg = open("/proc/loadavg")
+        loadavg = read_loadavg.read()
 
-    counter = (0)
+        counter = (0)
 
-    middle = ("")
-    finall_output = []
-    while True :
-        memory = loadavg[counter]
-        if memory != " ":
-            middle = middle + memory
-            counter = counter + 1
-        else :
-            finall_output.append(middle)
-            middle = ("")
-            counter = counter + 1
+        middle = ("")
+        finall_output = []
+        while True :
+            memory = loadavg[counter]
+            if memory != " ":
+                middle = middle + memory
+                counter = counter + 1
+            else :
+                finall_output.append(middle)
+                middle = ("")
+                counter = counter + 1
 
-        if counter == len(loadavg) :
-            finall_output.append(middle)
-            break
+            if counter == len(loadavg) :
+                finall_output.append(middle)
+                break
 
-    f4edit = finall_output[4]
-    f4edit = f4edit.replace("\n" , "")
-    finall_output[4] = f4edit
+        f4edit = finall_output[4]
+        f4edit = f4edit.replace("\n" , "")
+        finall_output[4] = f4edit
+        
+    except Exception :
+        finall_output = [None , None , None , None , None]
     
     return {"loadavg(1min)":finall_output[0] ,
             "loadavg(5min)":finall_output[1] ,
@@ -70,15 +87,21 @@ def system_data_loadavg():
             "last_process":finall_output[4]}
 
 
+
+
+
 def system_data_temp():
     try :
-        read_temp = open("/sys/devices/virtual/thermal/thermal_zone0/temp")
+        read_temp = open(config.temp_file_address)
         temp = read_temp.read()
         temp = int(temp)
     except Exception:
         temp = False
     
     return {"temp":temp}
+
+
+
 
 
 def system_data_ip():
@@ -94,6 +117,8 @@ def system_data_ip():
     
     except OSError as e :
         return " Not found" 
+
+
 
 
 def system_data_time():
@@ -124,8 +149,7 @@ def data_view():
     if request.form["user_name"] == user_token.user_name and request.form["token"] == user_token.token :
         return (jsonify(data))
     else :
-        return False
-    
+        return [("Username or token is incorrect") , 401 ]
     
     
     
