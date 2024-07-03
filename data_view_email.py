@@ -5,6 +5,7 @@ import requests
 import time 
 import datetime
 
+ #import configs file on /configs
 import configs.config as config
 import configs.email_config as email_config
 import configs.user_token as user_token
@@ -26,11 +27,23 @@ def api_request():
 
 
 
+
+"""
+what is check_time on config.check_time ?
+I put this variable here To specify the interval between two emails
+if you want edit this number go configs/config.py and edit check_time variable
+Point : be sure to use int type 
+"""
+#-------------------------------------------------------
+"""
+before run this app edit configs/config.py and change email variable 
+email = receiver email address
+"""
 def main():
 
     api_data = api_request()
 
-
+    #parse data from api request
     name = api_data[0]
     ip = api_data[1]
     
@@ -137,11 +150,13 @@ def main():
     </html>""")
     
     
-    send_email_html(f"D-view {ip}" , html_content , config.email)
+    send_email_html(f"D-view {name}" , html_content , config.email)
     
     
-    time.sleep(config.check_time * 60)
+    time.sleep(config.check_time * 60) #for convert min to secend *60
+    
     main()
+    #use recursive functions
 
 
 
@@ -157,6 +172,7 @@ def send_email_html(subject, html_content, receiver_email):
     from_email = email_config.email
     password = email_config.password
     
+    #dafault outlook smtp address and port
     smtp_server = "smtp.office365.com"
     smtp_port = 587
     
@@ -185,7 +201,8 @@ def send_email_html(subject, html_content, receiver_email):
 def send_email_text(subject, body, receiver_email):
     from_email = email_config.email
     password = email_config.password
-
+    
+    #dafault outlook smtp address and port
     smtp_server = "smtp.office365.com"
     smtp_port = 587
 
@@ -202,7 +219,7 @@ def send_email_text(subject, body, receiver_email):
         text = msg.as_string()
         server.sendmail(from_email, receiver_email, text)
         server.quit()
-        print("sent")
+        print(f"sent {system_time()}")
     except Exception as e:
         print(f"eror {e}")
 
