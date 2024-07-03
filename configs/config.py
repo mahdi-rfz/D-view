@@ -3,4 +3,4 @@ check_time = ("")
 email = ("")
 
 #-----------------------------------------------
-temp_file_address = ("")
+temp_file_address = ("") #find /sys -name temp
