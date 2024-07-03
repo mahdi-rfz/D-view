@@ -43,7 +43,7 @@ def system_data_system_name():
         
         f4edit = system_name.replace("\n" , "")
     except Exception :
-        f4edit = None
+        f4edit = ("eror")
     
     return {"name" : f4edit}
 
@@ -96,7 +96,7 @@ def system_data_temp():
         temp = read_temp.read()
         temp = int(temp)
     except Exception:
-        temp = False
+        temp = ("eror")
     
     return {"temp":temp}
 
