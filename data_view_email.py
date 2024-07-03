@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import requests
 import time 
+import datetime
 
 import configs.config as config
 import configs.email_config as email_config
@@ -10,16 +11,18 @@ import configs.user_token as user_token
 
 
 def api_request():
-    request = requests.post(config.api_url ,{"user_name":user_token.user_name , "token":user_token.token})
-    response = request.text
-    response = eval(response)
+    try :
+        request = requests.post(config.api_url ,{"user_name":user_token.user_name , "token":user_token.token})
+        response = request.text
+        response = eval(response)
 
-    return [response["name"], response["ipv4"] , response["time"] ,response["temp"] , 
-            (response["loadavg"])["loadavg(15min)"] , (response["loadavg"])["loadavg(5min)"] ,
-            (response["loadavg"])["loadavg(1min)"] ,
-            (response["loadavg"])["process"] , (response["loadavg"])["last_process"] ,
-            (response["uptime"])["uptime_day"] , (response["uptime"])["uptime_hour"] , (response["uptime"])["uptime_min"]]
-
+        return [response["name"], response["ipv4"] , response["time"] ,response["temp"] , 
+                (response["loadavg"])["loadavg(15min)"] , (response["loadavg"])["loadavg(5min)"] ,
+                (response["loadavg"])["loadavg(1min)"] ,
+                (response["loadavg"])["process"] , (response["loadavg"])["last_process"] ,
+                (response["uptime"])["uptime_day"] , (response["uptime"])["uptime_hour"] , (response["uptime"])["uptime_min"]]
+    except Exception :
+        return [None, None , None ,None , None , None , None , None , None , None , None , None]
 
 
 
@@ -135,16 +138,18 @@ def main():
     
     
     send_email_html(f"D-view {ip}" , html_content , config.email)
-
-    main()
     
     
     time.sleep(config.check_time * 60)
+    main()
 
 
 
 
-
+def system_time():
+    cu = datetime.datetime.now()
+    time = cu.strftime('%H:%M %p')
+    return time
 
 
 
@@ -168,7 +173,7 @@ def send_email_html(subject, html_content, receiver_email):
         text = msg.as_string()
         server.sendmail(from_email, receiver_email, text)
         server.quit()
-        print("sent")
+        print(f"sent {system_time()}")
     except Exception as e:
         print(f"eror: {e}")
     
