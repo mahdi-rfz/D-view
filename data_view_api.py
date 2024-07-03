@@ -1,5 +1,5 @@
 from flask import Flask , request , jsonify #v3.3
-import requests
+import requests #v2.31.0
 import datetime 
 import configs.user_token as user_token
 
@@ -16,7 +16,7 @@ paste temp link in system_data_temp function)
 
 def system_data_uptime() : 
     try :
-        read_uptime = open("/proc/uptime")
+        read_uptime = open("/proc/uptime") #uptime in linux on /proc/uptime file
         raw_uptime = read_uptime.read()
 
         space_rm = raw_uptime.index(" ")
@@ -38,12 +38,12 @@ def system_data_uptime() :
 
 def system_data_system_name():
     try :
-        read_name = open("/etc/hostname")
+        read_name = open("/etc/hostname")#hostname in linux on /etc/hostname file
         system_name = read_name.read()
         
         f4edit = system_name.replace("\n" , "")
     except Exception :
-        f4edit = ("eror")
+        f4edit = None
     
     return {"name" : f4edit}
 
@@ -52,7 +52,7 @@ def system_data_system_name():
 
 def system_data_loadavg():
     try :
-        read_loadavg = open("/proc/loadavg")
+        read_loadavg = open("/proc/loadavg")#loadavg in linux on /proc/loadavg file
         loadavg = read_loadavg.read()
 
         counter = (0)
@@ -88,15 +88,18 @@ def system_data_loadavg():
 
 
 
-
-
+"""
+import temp address file for use read in file because temp 
+file address is difrent on other system for edit temp address 
+go on configs/config.py
+"""
 def system_data_temp():
     try :
-        read_temp = open(config.temp_file_address)
+        read_temp = open(config.temp_file_address) 
         temp = read_temp.read()
         temp = int(temp)
     except Exception:
-        temp = ("eror")
+        temp = False
     
     return {"temp":temp}
 
@@ -106,7 +109,7 @@ def system_data_temp():
 
 def system_data_ip():
     try :
-        request_url = 'https://geolocation-db.com/jsonp/' 
+        request_url = 'https://geolocation-db.com/jsonp/' #use geolocation for pubic ipv4
         response = requests.get(request_url)
         response = response.text
         response = response.replace("callback(" , "")
@@ -131,6 +134,16 @@ def system_data_time():
 app = Flask(__name__)
 
 
+"""
+for edit api username and password go on /configs/user_token.py 
+im set default username and password :
+username = user
+token = ealkcjveafgDAtg
+use this user name and pasword for request to api on internet
+"""
+
+#eror 400 : request format is incorrect
+#eror 401 : Username or token is incorrect
 
 
 @app.route('/d_view', methods=['POST'])
