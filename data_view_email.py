@@ -60,7 +60,7 @@ def main():
     border-collapse: collapse;
     }
     th, td {
-    background-color: #7f90a5;
+    background-color: #8e9dae;
     }
     table {
     width: 100%;
