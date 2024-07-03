@@ -3,4 +3,4 @@ check_time = (30) #min
 email = ("")
 
 #-----------------------------------------------
-temp_file_address = ("") #find /sys -name temp
+temp_file_address = ("") #find /sys -type f -name 'temp*'
