@@ -33,8 +33,8 @@ def main():
     
     print(f"Name : {Fore.LIGHTGREEN_EX + api_data[0] + Fore.WHITE} , IPv4 : {Fore.LIGHTGREEN_EX + api_data[1] + Fore.WHITE}")
     print(f"Loadavg (15min , 5min , 1min) : {Fore.LIGHTGREEN_EX + api_data[4] + Fore.WHITE} , {Fore.LIGHTGREEN_EX + api_data[5] + Fore.WHITE} , {Fore.LIGHTGREEN_EX + api_data[6] + Fore.WHITE}")
-    print(f"Process : {Fore.LIGHTGREEN_EX + api_data[7] + Fore.WHITE} , Last process : {Fore.LIGHTGREEN_EX + api_data[8] + Fore.WHITE}")
+    print(f"Process : {Fore.LIGHTGREEN_EX + api_data[7] + Fore.WHITE} , Last process ID: {Fore.LIGHTGREEN_EX + api_data[8] + Fore.WHITE}")
     print(f"UPtime (day , hour , min) : {Fore.LIGHTGREEN_EX + str(api_data[9]) + Fore.WHITE} , {Fore.LIGHTGREEN_EX + str(api_data[10]) + Fore.WHITE} , {Fore.LIGHTGREEN_EX + str(api_data[11]) + Fore.WHITE}")
-    print(f"Temp : {Fore.LIGHTGREEN_EX + str(api_data[2]) + Fore.WHITE} , Time : {Fore.LIGHTGREEN_EX + str(api_data[3]) + Fore.WHITE}")
+    print(f"Time : {Fore.LIGHTGREEN_EX + str(api_data[2]) + Fore.WHITE} , Temp : {Fore.LIGHTGREEN_EX + str(api_data[3]) + Fore.WHITE}")
     
 main()
