@@ -3,6 +3,14 @@ from colorama import Fore
 
 import client_config
 
+
+"""
+this script created for request to api on server from other device 
+on internet That's why go on client_config.py and edit api url , 
+username and token . i as defautl set username and token but You better change it
+"""
+
+
 def text_art() :
     return """ █▀▄ ▄▀▄ ▀█▀ ▄▀▄    █ █ █ ██▀ █   █
  █▄▀ █▀█  █  █▀█ ▀▀ ▀▄▀ █ █▄▄ ▀▄▀▄▀
