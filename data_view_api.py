@@ -27,9 +27,9 @@ def system_data_uptime() :
         uptime_min = float(uptime) / 60
         
     except Exception :
-        uptime_day = None
-        uptime_hour = None
-        uptime_min = None
+        uptime_day = "Not found"
+        uptime_hour = "Not found"
+        uptime_min = "Not found"
     
     return {"uptime_min" : uptime_min , "uptime_hour" : uptime_hour , "uptime_day" : uptime_day}
 
@@ -43,7 +43,7 @@ def system_data_system_name():
         
         f4edit = system_name.replace("\n" , "")
     except Exception :
-        f4edit = None
+        f4edit = "Not found"
     
     return {"name" : f4edit}
 
@@ -78,7 +78,7 @@ def system_data_loadavg():
         finall_output[4] = f4edit
         
     except Exception :
-        finall_output = [None , None , None , None , None]
+        finall_output = ["Not found" , "Not found" , "Not found" , "Not found" , "Not found"]
     
     return {"loadavg(1min)":finall_output[0] ,
             "loadavg(5min)":finall_output[1] ,
@@ -99,7 +99,7 @@ def system_data_temp():
         temp = read_temp.read()
         temp = int(temp)
     except Exception:
-        temp = False
+        temp = " Not found" 
     
     return {"temp":temp}
 
